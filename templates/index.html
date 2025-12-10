@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My AI</title>
+    <style>
+        body {
+            background-color: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        #chat {
+            height: 70vh;
+            overflow-y: auto;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .message {
+            margin: 8px 0;
+        }
+        .user {
+            color: #4da3ff;
+        }
+        .ai {
+            color: #7fff7f;
+        }
+        #input-box {
+            display: flex;
+            gap: 10px;
+        }
+        #msg {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+        }
+        #send {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4da3ff;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h2>My Personal AI</h2>
+
+<div id="chat"></div>
+
+<div id="input-box">
+    <input id="msg" placeholder="Type your message..." />
+    <button id="send">Send</button>
+</div>
+
+<script>
+    document.getElementById("send").onclick = async () => {
+        const msg = document.getElementById("msg").value;
+        if (!msg) return;
+
+        const chat = document.getElementById("chat");
+        chat.innerHTML += `<div class="message user">You: ${msg}</div>`;
+        document.getElementById("msg").value = "";
+
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: msg })
+        });
+
+        const data = await response.json();
+        chat.innerHTML += `<div class="message ai">AI: ${data.reply}</div>`;
+        chat.scrollTop = chat.scrollHeight;
+    };
+</script>
+
+</body>
+</html>
